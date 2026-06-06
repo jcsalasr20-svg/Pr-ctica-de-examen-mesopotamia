@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Examen Maestro: Mesopotamia</title>
+    <style>
+        :root { --primary: #d4af37; --bg: #111417; --card-bg: #1b2026; --text: #e0e0e0; }
+        body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; padding: 20px; }
+        #app { width: 100%; max-width: 600px; background: var(--card-bg); padding: 30px; border-radius: 15px; border: 1px solid var(--primary); }
+        .progress-bar { height: 10px; background: #333; margin: 20px 0; border-radius: 5px; }
+        #progress { height: 100%; background: var(--primary); width: 0%; transition: width 0.3s; }
+        button { background: var(--primary); border: none; padding: 15px; width: 48%; cursor: pointer; font-weight: bold; }
+        #feedback { margin-top: 20px; padding: 10px; border-left: 4px solid var(--primary); }
+    </style>
+</head>
+<body>
+<div id="app">
+    <h1>Mesopotamia: Examen 100</h1>
+    <div class="progress-bar"><div id="progress"></div></div>
+    <div id="quiz">
+        <h3 id="q-text">Cargando...</h3>
+        <div id="btns"><button onclick="check(true)">Verdadero</button><button onclick="check(false)">Falso</button></div>
+        <div id="feedback"></div>
+    </div>
+</div>
+
+<script>
+    // Banco de preguntas (Base para 100)
+    let db = [
+        {q: "La escritura cuneiforme se inventó hacia el 3000 a.C.", a: true},
+        {q: "La Baja Mesopotamia era la zona más montañosa.", a: false},
+        {q: "El Zigurat servía como almacén de granos y contabilidad.", a: true},
+        {q: "Los esclavos eran capturados principalmente por raza.", a: false},
+        {q: "El sistema sexagesimal es herencia mesopotámica.", a: true},
+        {q: "El norte (Asiria) se expandió militarmente por falta de recursos.", a: true},
+        {q: "La piedra era el material más abundante en Mesopotamia.", a: false},
+        {q: "El excedente agrícola permitía la existencia de artesanos.", a: true},
+        {q: "Los persas absorbieron la región en el 539 a.C.", a: true},
+        {q: "Los sacerdotes vivían en la base del Zigurat.", a: false}
+        // ... (Agrega aquí hasta 100 preguntas siguiendo el formato)
+    ];
+
+    let state = { idx: 0, streak: 0, check: 0 };
+    let qList = db.sort(() => Math.random() - 0.5);
+
+    function next() {
+        if(state.idx >= 100) { alert("¡Dominio Absoluto!"); return; }
+        document.getElementById('q-text').innerText = qList[state.idx % qList.length].q;
+        document.getElementById('progress').style.width = (state.idx / 100 * 100) + '%';
+    }
+
+    function check(val) {
+        if(val === qList[state.idx % qList.length].a) {
+            state.streak++;
+            state.idx++;
+            document.getElementById('feedback').innerText = "Análisis Correcto: Profundizando concepto.";
+            if(state.streak % 5 === 0) { state.check = state.idx; document.getElementById('feedback').innerText += " (Checkpoint guardado)"; }
+        } else {
+            document.getElementById('feedback').innerText = "Punto Ciego Detectado: Reiniciando al checkpoint.";
+            state.idx = state.check;
+            state.streak = 0;
+        }
+        next();
+    }
+    next();
+</script>
+</body>
+</html>
